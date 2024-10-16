@@ -43,7 +43,7 @@ Execute the following command to start the application:
 python imageComparer-v2.py
 ```
 
-##How to Use the Application
+## How to Use the Application
 1. Prepare the Image Folders
 Make sure you have two folders, each containing images with the same file names and types in both folders (e.g., image1.jpg in both Folder A and Folder B).
 
