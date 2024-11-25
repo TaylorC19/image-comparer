@@ -61,6 +61,26 @@ def select_folder(entry_widget):
     entry_widget.delete(0, tk.END)  # Clear the existing text in the entry box
     entry_widget.insert(0, folder_selected)  # Insert the selected folder path
 
+# Custom dialog with Continue and Close buttons
+def custom_messagebox(title, message):
+    popup = tk.Toplevel(root)
+    popup.title(title)
+    popup.geometry("400x200")
+    popup.transient(root)  # Set it to be on top of the main window
+    popup.grab_set()  # Make it modal
+
+    label = tk.Label(popup, text=message, wraplength=350)
+    label.pack(pady=20)
+
+    button_frame = tk.Frame(popup)
+    button_frame.pack(pady=10)
+
+    continue_button = tk.Button(button_frame, text="Continue", command=popup.destroy)
+    continue_button.pack(side=tk.LEFT, padx=10)
+
+    close_button = tk.Button(button_frame, text="Close", command=root.destroy)
+    close_button.pack(side=tk.LEFT, padx=10)
+
 # Function to run the comparison after the user selects the folders
 def run_comparison():
     folder1 = folder1_entry.get()
@@ -76,7 +96,7 @@ def run_comparison():
 
     non_black_images = []
     missing_images = []
-    different_sizes = [] # add warning message if images are different sizes
+    different_sizes = []
 
     # Iterate through images in testFolder1
     for filename in os.listdir(folder1):
@@ -105,31 +125,31 @@ def run_comparison():
             missing_images.append(f"{os.path.basename(folder2)}/{filename} is missing in {os.path.basename(folder1)}")
 
     # create output message
-    outputMessage = ''
+    output_message = ''
 
     if non_black_images:
         output_file = os.path.join(diff_folder, "different_images.txt")
         with open(output_file, "w", encoding="utf-8") as f:
             for img in non_black_images:
                 f.write(img + "\n")
-        outputMessage += f"List of different images saved to {os.path.basename(diff_folder)}/{os.path.basename(output_file)}\n"
+        output_message += f"List of different images saved to {os.path.basename(diff_folder)}/{os.path.basename(output_file)}\n"
     if missing_images:
         output_file = os.path.join(diff_folder, "missing_images.txt")
         with open(output_file, "w", encoding="utf-8") as f:
             for img in missing_images:
                 f.write(img + "\n")
-        outputMessage += f"List of missing images saved to {os.path.basename(diff_folder)}/{os.path.basename(output_file)}\n"
+        output_message += f"List of missing images saved to {os.path.basename(diff_folder)}/{os.path.basename(output_file)}\n"
     if different_sizes:
         output_file = os.path.join(diff_folder, "different_sizes.txt")
         with open(output_file, "w", encoding="utf-8") as f:
             for img in different_sizes:
                 f.write(img + "\n")
-        outputMessage += f"List of different size image(s) saved to {os.path.basename(diff_folder)}/{os.path.basename(output_file)}"
+        output_message += f"List of different size image(s) saved to {os.path.basename(diff_folder)}/{os.path.basename(output_file)}"
 
-    if outputMessage:
-        messagebox.showinfo("Comparison Complete", outputMessage)
+    if output_message:
+        custom_messagebox("Comparison Complete", output_message)
     else:
-        messagebox.showinfo("No Differences", "No differences found in any images.")
+        custom_messagebox("No Differences", "No differences found in any images.")
 
     # Write non-black images to a text file with UTF-8 encoding
     # if non_black_images and missing_images:
